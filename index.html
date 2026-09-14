@@ -1,0 +1,52 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link rel="stylesheet" href="style.css">
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+    <title>LabHeat</title>
+</head>
+<body>
+    <h1>Bienvenido a LabHeat: Laboratorio Virtual</h1>
+    <p>Primer paso de nuestro proyecto</p>
+    <div>
+        <label>Temperatura inicial del agua(°C):</label>
+        <input type="number" id="temp-inicial" value="80">  
+    </div>
+    <div>
+        <label>Seleccione el material:</label>
+        <select id="material">
+            <option value="Metal">Metal</option>
+            <option value="Vidrio">Vidrio</option>
+            <option value="Ceramica">Cerámica</option>
+            <option value="Plastico">Plástico</option>
+            <option value="Greda">Greda</option>
+        </select>
+    </div>
+    <div>
+        <label>Temperatura Ambiente(°C):</label>
+        <input type="number" id="temp-ambiente" value="25">  
+    </div>
+    <div>
+        <button id="iniciar">Iniciar</button>
+        <button id="detener">Detener</button>
+        <button id="reiniciar">Reiniciar</button>
+    </div> 
+    <div>   
+        <h3>Gráfica de temperatura vs tiempo</h3>
+        <canvas id="grafico-temperatura"></canvas>
+        <button id="Exportar">Descargar datos (.csv)</button>
+    </div>
+    <div>
+        <h3>Lecturas en vivo</h3>
+        <p> Tiempo transcurrido: <span id="tiempo">0</span> segundos</p>
+        <p> Temperatura actual: <span id="temp-actual">--</span>°C</p>
+    </div>
+
+
+<script src="simulation.js"></script>
+<script src="app.js"></script>
+</body>
+
+</html>
