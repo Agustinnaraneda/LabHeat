@@ -8,42 +8,81 @@
     <title>LabHeat</title>
 </head>
 <body>
-    <h1>Bienvenido a LabHeat: Laboratorio Virtual</h1>
-    <p>Primer paso de nuestro proyecto</p>
-    <div>
-        <label>Temperatura inicial del agua(°C):</label>
-        <input type="number" id="temp-inicial" value="80">  
-    </div>
-    <div>
-        <label>Seleccione el material:</label>
-        <select id="material">
-            <option value="Metal">Metal</option>
-            <option value="Vidrio">Vidrio</option>
-            <option value="Ceramica">Cerámica</option>
-            <option value="Plastico">Plástico</option>
-            <option value="Greda">Greda</option>
-        </select>
-    </div>
-    <div>
-        <label>Temperatura Ambiente(°C):</label>
-        <input type="number" id="temp-ambiente" value="25">  
-    </div>
-    <div>
-        <button id="iniciar">Iniciar</button>
-        <button id="detener">Detener</button>
-        <button id="reiniciar">Reiniciar</button>
-    </div> 
-    <div>   
-        <h3>Gráfica de temperatura vs tiempo</h3>
-        <canvas id="grafico-temperatura"></canvas>
-        <button id="Exportar">Descargar datos (.csv)</button>
-    </div>
-    <div>
-        <h3>Lecturas en vivo</h3>
-        <p> Tiempo transcurrido: <span id="tiempo">0</span> segundos</p>
-        <p> Temperatura actual: <span id="temp-actual">--</span>°C</p>
-    </div>
 
+    <header class="app-header">
+        <h1>LabHeat: Laboratorio Virtual</h1>
+        <p>Simulación de enfriamiento por ley de Newton</p>
+    </header>
+
+    <main class="dashboard">
+
+        <aside class="panel-controls">
+
+            <div class="card card-config">
+                <h3 class="card-title">Configuración</h3>
+
+                <div class="form-group">
+                    <label for="temp-inicial">Temperatura inicial del agua (°C):</label>
+                    <input type="number" id="temp-inicial" value="80" min="-20" max="150" step="0.1">
+                </div>
+
+                <div class="form-group">
+                    <label for="temp-ambiente">Temperatura Ambiente (°C):</label>
+                    <input type="number" id="temp-ambiente" value="25" min="-20" max="150" step="0.1">
+                </div>
+
+                <div class="form-group">
+                    <label>Seleccione el material:</label>
+                    <div id="carrusel-materiales" class="carrusel">
+                        <div class="material-card active" data-material="Metal"> Metal</div>
+                        <div class="material-card" data-material="Vidrio"> Vidrio</div>
+                        <div class="material-card" data-material="Ceramica"> Cerámica</div>
+                        <div class="material-card" data-material="Plastico"> Plástico</div>
+                        <div class="material-card" data-material="Greda"> Greda</div>
+                    </div>
+                </div>
+            </div>
+
+            <div class="card card-actions">
+                <h3 class="card-title"> Control del ensayo</h3>
+                <div class="btn-group">
+                    <button id="iniciar" class="btn btn-start">Iniciar</button>
+                    <button id="detener" class="btn btn-stop">Detener</button>
+                    <button id="reiniciar" class="btn btn-reset">Reiniciar</button>
+                </div>
+            </div>
+
+        </aside>
+
+        <section class="panel-main">
+
+            <div class="card card-chart">
+                <h3 class="card-title">Gráfica de temperatura vs tiempo</h3>
+                <div class="chart-wrapper">
+                    <canvas id="grafico-temperatura"></canvas>
+                </div>
+                <button id="Exportar" class="btn btn-export">Descargar datos (.csv)</button>
+            </div>
+
+            <div class="card card-readings">
+                <h3 class="card-title"> Lecturas en vivo</h3>
+                <div class="readings-grid">
+                    <div class="reading-item">
+                        <span class="reading-label">Tiempo transcurrido</span>
+                        <span class="reading-value" id="tiempo">0</span>
+                        <span class="reading-unit">segundos</span>
+                    </div>
+                    <div class="reading-item">
+                        <span class="reading-label">Temperatura actual</span>
+                        <span class="reading-value" id="temp-actual">--</span>
+                        <span class="reading-unit">°C</span>
+                    </div>
+                </div>
+            </div>
+
+        </section>
+
+    </main>
 
 <script src="simulation.js"></script>
 <script src="app.js"></script>

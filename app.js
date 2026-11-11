@@ -1,10 +1,28 @@
-
 const BotonIniciar = document.getElementById("iniciar");
 const BotonDetener = document.getElementById("detener");
 const BotonReiniciar = document.getElementById("reiniciar");
-const BotonExportar = document.getElementById("Exportar"); //
+const BotonExportar = document.getElementById("Exportar");
 
-const selectMaterial = document.getElementById("material");
+const carruselMateriales = document.getElementById("carrusel-materiales");
+let materialSeleccionado = "Metal";
+
+carruselMateriales.addEventListener("click", function(e) {
+  const tarjeta = e.target.closest(".material-card");
+  if (!tarjeta) return;
+
+  const material = tarjeta.dataset.material;
+  if (!material) return;
+  materialSeleccionado = material;
+
+  carruselMateriales.querySelectorAll(".material-card").forEach(function(t) {
+    if (t.dataset.material === material) {
+      t.classList.add("active");
+    } else {
+      t.classList.remove("active");
+    }
+  });
+});
+
 const inputTempInicial = document.getElementById("temp-inicial");
 const inputTempAmbiente = document.getElementById("temp-ambiente");
 const spanTempActual = document.getElementById("temp-actual");
@@ -13,6 +31,7 @@ let reloj = null;
 let tiempoTranscurrido = 0;
 let datosSimulacion = []; 
 
+const filtroMedia = new FiltroMediaMovil();
 
 const ctx = document.getElementById("grafico-temperatura").getContext("2d");
 const grafico = new Chart(ctx, {
@@ -50,13 +69,13 @@ const grafico = new Chart(ctx, {
 function pasoSimulacion() {
   tiempoTranscurrido = tiempoTranscurrido + 1; 
 
-  const material = selectMaterial.value; 
+  const material = materialSeleccionado; 
   const t0 = Number(inputTempInicial.value); 
   const tAmb = Number(inputTempAmbiente.value);
 
   const tempIdeal = calcularTempIdeal(tiempoTranscurrido, t0, tAmb, material);
   const tempSensor = simularSensorDS(tempIdeal);
-  const tempFiltrada = aplicarFiltroMedia(tempSensor);
+  const tempFiltrada = filtroMedia.aplicar(tempSensor);
 
   spanTiempo.textContent = tiempoTranscurrido;
   spanTempActual.textContent = tempSensor.toFixed(2);
@@ -67,6 +86,11 @@ function pasoSimulacion() {
     cruda: tempSensor.toFixed(3),
     filtrada: tempFiltrada.toFixed(3)
   });
+
+  if (grafico.data.labels.length >= 300) {
+    grafico.data.labels.shift();
+    grafico.data.datasets.forEach(dataset => dataset.data.shift());
+  }
 
   grafico.data.labels.push(tiempoTranscurrido);
   grafico.data.datasets[0].data.push(tempSensor);
@@ -79,13 +103,14 @@ BotonIniciar.addEventListener("click", function() {
 
   inputTempInicial.disabled = true;
   inputTempAmbiente.disabled = true;
-  selectMaterial.disabled = true;
+  carruselMateriales.classList.add("disabled");
 
   reloj = setInterval(pasoSimulacion, 1000);
 });
 
 BotonDetener.addEventListener("click", function() {
-  clearInterval(reloj); 
+  clearInterval(reloj);
+  reloj = null;
 });
 
 BotonReiniciar.addEventListener("click", function() {
@@ -97,11 +122,11 @@ BotonReiniciar.addEventListener("click", function() {
   spanTempActual.textContent = "--";
 
   datosSimulacion = [];
-  resetearFiltro();
+  filtroMedia.resetear();
 
   inputTempInicial.disabled = false;
   inputTempAmbiente.disabled = false;
-  selectMaterial.disabled = false;
+  carruselMateriales.classList.remove("disabled");
 
   grafico.data.labels = [];
   grafico.data.datasets[0].data = [];
@@ -125,7 +150,7 @@ BotonExportar.addEventListener("click", function() {
   const enlace = document.createElement("a");
 
   enlace.href = url;
-  enlace.download = `ensayo_${selectMaterial.value}.csv`;
+  enlace.download = `ensayo_${materialSeleccionado}.csv`;
   enlace.click();
   URL.revokeObjectURL(url);
 });

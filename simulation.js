@@ -18,17 +18,22 @@ function simularSensorDS(tempReal) {
   return Math.round(tempConRuido / paso12Bits) * paso12Bits;
 }
 
-let historialFiltro = [];
-
-function aplicarFiltroMedia(nuevoValor) {
-  historialFiltro.push(nuevoValor);
-  if (historialFiltro.length > 5) {
-    historialFiltro.shift();
+class FiltroMediaMovil {
+  constructor(tamanoVentana = 5) {
+    this.tamanoVentana = tamanoVentana;
+    this.historial = [];
   }
-  const suma = historialFiltro.reduce((acumulado, val) => acumulado + val, 0);
-  return suma / historialFiltro.length;
-}
 
-function resetearFiltro() {
-  historialFiltro = [];
+  aplicar(nuevoValor) {
+    this.historial.push(nuevoValor);
+    if (this.historial.length > this.tamanoVentana) {
+      this.historial.shift();
+    }
+    const suma = this.historial.reduce((acumulado, val) => acumulado + val, 0);
+    return suma / this.historial.length;
+  }
+
+  resetear() {
+    this.historial = [];
+  }
 }
